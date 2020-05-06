@@ -1,0 +1,104 @@
+<html>
+
+<head>
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <title> D3 Tutorial </title>
+
+    <!--specifies that our DIV and SVG elements takes the full width and height of the HTML window-->
+    <style>
+        div {
+            width: 100%;
+            height: 100%
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        circle {
+            fill: aquamarine;
+            stroke: grey;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+
+<body>
+<h2>D3 Visual Elements</h2>
+
+<!--a new DIV element "myDiv" with a SVG element inside-->
+<div id="myDiv">
+    <svg>
+    </svg>
+</div>
+
+<script>
+
+    var dataPath = "data/ecoFootprint.csv";	// our data file
+
+    d3.csv(dataPath)                            // loading our data
+        .then(function (myData) {
+            //console.log(myData);
+			var popExtent = d3.extent(myData, function (d) {
+				return parseFloat(d.Population);
+			});
+			var popMax = d3.max(myData, function (d) {
+				return parseFloat(d.Population);
+			});
+			var min = 0, max = 300;
+			var scale = d3.scaleLinear()
+					.range([min, max])
+					.domain(popExtent);
+            d3.select("svg")
+                .selectAll("circle")
+                .data(myData)
+                .enter()
+                .append("circle")
+                .attr("r", function (d) {
+                    return scale(d.Population);
+                })
+                .attr("cx", 50 + popMax/2)
+                .attr("cy", function (d, i) {
+					return i * max + max;
+                })
+                .on("mouseout", function (d, i) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .style("fill", "aquamarine");
+                    d3.selectAll(".tooltip")
+                        .remove()
+                })
+                .on("mouseenter", function (d, i) {
+                    d3.select(this)
+                        .style("cursor", "pointer")
+                        .transition()
+                        .duration(200)
+                        .style("fill", "gold");
+                    d3.select("svg")
+                        .append("text")
+                        .attr("class", "tooltip")
+                        .attr("x", 55 + parseFloat(d.Population))
+                        .attr("y", i * 50 + 50 + 15)
+                        .text("Population: " + d.EcoFootprint);
+                });
+            d3.select("svg")
+                .selectAll("text")
+                .data(myData)
+                .enter()
+                .append("text")
+                .attr("x", 50)
+                .attr("y", function (d, i) {
+					return i * max + max;
+                })
+                .text(function (d) {
+                    return d.Country;
+                })
+        });
+
+</script>
+
+</body>
+
+</html>
