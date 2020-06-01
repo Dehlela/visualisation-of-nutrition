@@ -1,0 +1,133 @@
+<html>
+<head>
+    <title>Information Visualization</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <link rel="shortcut icon" type="image/png" href="favicon.png"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/general.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Sofia' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Basic&display=swap" rel="stylesheet">
+</head>
+<body style="background-image: url(images/background.jpg)">
+<div class="title-descr info-bg">
+    <h1>Know Your Chocolate</h1>
+    <p class="normal-text"> This visualization allows you to compare nutritional facts between different chocolate
+        brands, as well as choose a specific chocolate and compare its nutrition to the average nutrition of all
+        chocolates produced by its brand.</p>
+</div>
+
+<div class="row">
+    <div id="brand-section">
+        <div id="brand-title" class="normal-title">
+            Choose a Brand
+        </div>
+        <div id="brand-choices">
+            <svg class="choco-svg" width="100%" height="100%">
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:white;stop-opacity:1"/>
+                    <stop offset="20%" style="stop-color:#3d73ff;stop-opacity:1"/>
+                    <stop offset="40%" style="stop-color:white;stop-opacity:1"/>
+                    <stop offset="60%" style="stop-color:#3d73ff;stop-opacity:1"/>
+                    <stop offset="80%" style="stop-color:white;stop-opacity:1"/>
+                    <stop offset="100%" style="stop-color:#3d73ff;stop-opacity:1"/>
+                </linearGradient>
+
+            </svg>
+        </div>
+    </div>
+    <div id="overall-section">
+        <div class="row" style="margin-bottom: 1vh">
+            <div id="overall-title" class="normal-title">
+                Average Nutrition in
+                <span id="chosen-brand"></span>
+            </div>
+            <div id="unit-choose-dropdown">
+                <div class="unit-info">
+                    Per 100g
+                </div>
+            </div>
+        </div>
+        <div class="row" style="height: 50vh">
+            <div id="overall-data-container" class="row">
+                <div id="overall-labels">
+
+                </div>
+                <div id="overall-data">
+
+                </div>
+            </div>
+            <div id="overall-info" class="info-bg normal-text">
+                <span class="normal-title">Facts</span>
+                <p style="min-height: 25vh">Hover over coloured blocks to know more!</p>
+                <span style="font-size:0.8vw"> Note: The visualization is based on only a portion of data- it doesn't represent all chocolates in a given brand.</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<row>
+    <div id="solo-choco-section">
+        <div id="choco-choose-dropdown">
+            <div class="normal-dropdown">
+                Choose a Chocolate:
+                <select class="normal-dropdown">
+                    <!--<option value="none">Choose a Chocolate</option>-->
+                </select>
+            </div>
+
+        </div>
+        <div id="solo-choco-info" class="normal-text">
+            <span class="normal-title">Nutrition</span>
+            <p>Hover over coloured blocks to know more!</p>
+        </div>
+        <div id="solo-choco-container">
+            <svg id="solo-choco-svg" width="100%" height="100%">
+            </svg>
+        </div>
+    </div>
+    <div id="legend-section" class="info-bg">
+        <div style="padding-bottom: 1vh">
+            <span  class="normal-title" >How to Interpret</span>
+            <span class="normal-text" style="float: right;"><a href="https://world.openfoodfacts.org/"  style="color: #7D402B !important;">Data Source: Open Food Facts</a></span>
+        </div>
+        <div class="normal-text">
+            <div style="display: inline">
+                <img src="images/brand.png">
+                <p style="display: inline-flex">Chosen Brand</p>
+            </div>
+            <div style="display: inline; padding-left: 1vw">
+                <img src="images/chosen.png">
+                <p style="display: inline-flex">Brand Option</p>
+            </div>
+            <div style="display: inline; padding-left: 2vw">
+                <img src="images/Rectangle%2025.png">
+                <p style="display: inline-flex">Fats</p>
+            </div>
+            <div style="display: inline; padding-left: 1vw">
+                <img src="images/Rectangle%2026.png">
+                <p style="display: inline-flex">Carbohydrates</p>
+            </div>
+            <div style="display: inline">
+                <img src="images/Rectangle%2027.png">
+                <p style="display: inline-flex">Sugars</p>
+            </div>
+            <div style="display: inline; padding-left: 1vw">
+                <img src="images/Rectangle%2028.png">
+                <p style="display: inline-flex">Proteins</p>
+            </div>
+            <div style="display: inline">
+                <img src="images/Rectangle%2029.png">
+                <p style="display: inline-flex">Sodium</p>
+            </div>
+        </div>
+
+    </div>
+</row>
+
+<script src="js/general.js"></script>
+
+</body>
+</html>
+
