@@ -1,2 +1,4 @@
 # Visualisation of Nutritional Components of Chocolates
 The project is a theme-based, interactive visualisation of nutrition in various chocolates, which is intended for any chocolate consumers to get a quick and easy glance at the composition and benefits of what they are consuming.
+
+The project is created as a website with interactive elements encoded using D3.js and JQuery. Every single element in the visualisation has been carefully coded by me- including images, that have been designed from scratch using the tool Figma. The data for this visualisation is obtained from https://world.openfoodfacts.org/
