@@ -1,10 +1,8 @@
 var dataPath = "data/chocolates.csv";
 d3.csv(dataPath)
     .then(function (myData) {
-        // console.log(myData);
 
-        var hover_msg = "Hover over flavours to know more!";
-
+        // handling brand choice
         var chosen_brand = window.location.search.substr(1);
         if (chosen_brand.length === 0) {
             chosen_brand = "Kinder";
@@ -13,8 +11,9 @@ d3.csv(dataPath)
         } else if (chosen_brand.includes("%20")) {
             chosen_brand = chosen_brand.replace("%20", " ");
         }
-        //console.log(chosen_brand);
+
         d3.select("#overall-title #chosen-brand").text(chosen_brand);
+        var hover_msg = "Hover over coloured blocks to know more!";
 
         var brand_names = d3.map(myData, function (d) {
             return d.brands_tags;
@@ -27,14 +26,11 @@ d3.csv(dataPath)
         var choco_names = [];
         myData.forEach(function (d) {
             if (d.brands_tags === chosen_brand) {
-                //console.log(d.product_name);
                 choco_names.push(d.product_name);
             }
         });
         console.log(choco_names[0]);
         var chosen_choco_name = choco_names[0];
-
-        //var data_choice = "nutrition";
         var data_labels = myData.columns.slice(2, 7);
 
         sync_solo_choco_data(chosen_choco_name);
@@ -191,14 +187,6 @@ d3.csv(dataPath)
             });
         sync_overall_data(chosen_brand);
 
-        d3.select("#unit-choose-dropdown select")
-            .on("change", function () {
-                //console.log(newUnit + " selected!");
-                unit = d3.select(this).property('value');
-                d3.select("#overall-data").selectAll("svg").remove();
-                sync_overall_data(chosen_brand);
-            });
-
         // Solo choco section - code referred from http://bl.ocks.org/williaster/10ef968ccfdc71c30ef8#index.html
 
         var choco_choose = d3.select("#choco-choose-dropdown select")
@@ -230,11 +218,9 @@ d3.csv(dataPath)
                     })
                 }
             });
-            //console.log(data);
             var extent = d3.extent(data, function (d) {
                 return parseFloat(d);
             });
-            //console.log(extent);
             var chocomin = 0, chocomax = 31;
             var choco_scale = d3.scaleLinear()
                 .range([chocomin, chocomax])
@@ -244,10 +230,11 @@ d3.csv(dataPath)
                 .data(data)
                 .enter();
 
+            // Code for rounding corners obtained from https://www.w3schools.com/graphics/svg_rect.asp
             choco_data = data;
             solo_choco.append("rect")
                 .attr("width", "200")
-                .attr("height", "50")
+                .attr("height", "50vh")
                 .attr("x", "30")
                 .attr("y", "60")
                 .attr("rx", "0");
@@ -283,9 +270,9 @@ d3.csv(dataPath)
                         .transition()
                         .duration(200)
                         .style("opacity", "1");
-                    d3.select("#solo-choco-info")
+                    d3.select("#solo-choco-info p")
                         .text(hover_msg);
-                    d3.select("#overall-info")
+                    d3.select("#overall-info p")
                         .text(hover_msg);
                 })
                 .on("mouseenter", function (d, i) {
@@ -299,11 +286,15 @@ d3.csv(dataPath)
                         .transition()
                         .duration(200)
                         .style("opacity", "0.5");
-                    d3.select("#solo-choco-info")
+                    d3.select("#solo-choco-info p")
                         .text(function () {
-                            return data_labels[i].replace("_100g", "") + " " + d + unit;
+                            var val = d+unit;
+                            if(d === ''){
+                                val = ": No Data Available";
+                            }
+                            return "This chocolate contains: " + data_labels[i].replace("_100g", "") + " " + val;
                         });
-                    d3.select("#overall-info")
+                    d3.select("#overall-info p")
                         .text(function () {
                             if (d > overall_averages[i]) {
                                 return chosen_choco + " has more " + data_labels[i].replace("_100g", "") + " than most " + chosen_brand + " chocolates.";
@@ -320,24 +311,19 @@ d3.csv(dataPath)
 
             var label_extents = [], averages = [];
             data_labels.forEach(function make_choco(labelname) {
-                //console.log(labelname);
                 var extent = d3.extent(myData, function (d) {
                     if (d.brands_tags === chosen_b) {
                         return parseFloat(d[labelname]);
                     }
                 });
-                //console.log(extent);
                 label_extents.push(extent);
-                //console.log(extent);
                 var mean = d3.mean(myData, function (d) {
                     if (d.brands_tags === chosen_b) {
                         return parseFloat(d[labelname]);
                     }
                 });
-                //console.log(mean);
                 averages.push(mean);
             });
-            //console.log(label_extents);
             var min = 100, max = 0;
             for (var i = 0; i < label_extents.length; i++) {
                 var lmin = d3.min(label_extents[i]);
@@ -349,7 +335,6 @@ d3.csv(dataPath)
                     max = lmax;
                 }
             }
-            //console.log(min, max);
             var chocomin = 0, chocomax = 11;
             var overall_scale = d3.scaleLinear()
                 .range([chocomin, chocomax])
@@ -388,11 +373,15 @@ d3.csv(dataPath)
                             .transition()
                             .duration(200)
                             .style("opacity", "0.5");
-                        d3.select("#solo-choco-info")
+                        d3.select("#solo-choco-info p")
                             .text(function () {
-                                return data_labels[i].replace("_100g", "") + " " + choco_data[i] + unit;
+                                var val = choco_data[i] + unit;
+                                if(choco_data[i] === ''){
+                                    val = ": No Data Available";
+                                }
+                                return "This chocolate contains: " + data_labels[i].replace("_100g", "") + " " + val;
                             });
-                        d3.select("#overall-info")
+                        d3.select("#overall-info p")
                             .text(function () {
                                 if (choco_data[i] > d) {
                                     return chosen_choco_name + " has more " + data_labels[i].replace("_100g", "") + " than most " + chosen_brand + " chocolates.";
@@ -410,9 +399,9 @@ d3.csv(dataPath)
                             .transition()
                             .duration(200)
                             .style("opacity", "1");
-                        d3.select("#solo-choco-info")
+                        d3.select("#solo-choco-info p")
                             .text(hover_msg);
-                        d3.select("#overall-info")
+                        d3.select("#overall-info p")
                             .text(hover_msg);
                     });
                 svg_chunk.append("line")
@@ -430,7 +419,5 @@ d3.csv(dataPath)
                 .text(function (d) {
                     return (Math.round(d * 100) / 100) + unit;
                 });
-            //console.log("done!")
         }
-
     });
